@@ -1,6 +1,5 @@
 package com.bnc.expression.parse;
 
-import cn.hutool.crypto.Padding;
 import cn.hutool.json.JSONUtil;
 import com.bnc.expression.DimensionExpression;
 import com.bnc.expression.Expression;
@@ -12,7 +11,10 @@ import com.bnc.expression.relation.RelationExpression;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Stack;
 
 /**
  * @author songliangliang
