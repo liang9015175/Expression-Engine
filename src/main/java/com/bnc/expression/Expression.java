@@ -16,5 +16,7 @@ public interface Expression {
      * @param o 对象
      * @return true/false
      */
-    boolean eval(Map<String,Object> o);
+    boolean eval(Map<String, Object> o);
+
+    String getVal();
 }

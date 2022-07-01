@@ -53,4 +53,7 @@ public class ValueExpression<T> implements Expression {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
+    public String getVal() {
+        return val.toString();
+    }
 }

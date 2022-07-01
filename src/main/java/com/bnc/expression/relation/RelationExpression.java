@@ -7,6 +7,7 @@ import com.bnc.expression.ValueExpression;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Setter
+@Accessors(chain = true)
 public abstract class RelationExpression implements Expression {
 
 

@@ -1,6 +1,6 @@
 package com.bnc.expression.node;
 
-import com.bnc.expression.DimensionExpression;
+import cn.hutool.json.JSONUtil;
 import com.bnc.expression.Expression;
 import com.bnc.expression.logic.LogicExpression;
 import com.bnc.expression.relation.RelationExpression;
@@ -36,7 +36,7 @@ public class ExpressionNode implements Expression {
     /**
      * 是否是叶子节点，叶子节点是单个表达式的最小单位，包含了维度和值，以及基本的关系比如 = != 等等
      */
-    //private boolean leaf;
+    private boolean leaf;
 
     /**
      * 关系表达式，包含了维度和值，注意 如果是虚拟节点，则此值不存在,只有叶子节点才有
@@ -92,4 +92,8 @@ public class ExpressionNode implements Expression {
         }
     }
 
+    @Override
+    public String getVal() {
+        return JSONUtil.toJsonStr(this);
+    }
 }

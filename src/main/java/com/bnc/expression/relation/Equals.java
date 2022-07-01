@@ -2,7 +2,6 @@ package com.bnc.expression.relation;
 
 import com.bnc.expression.DimensionExpression;
 import com.bnc.expression.ValueExpression;
-import lombok.NoArgsConstructor;
 
 /**
  * 等号表达式
