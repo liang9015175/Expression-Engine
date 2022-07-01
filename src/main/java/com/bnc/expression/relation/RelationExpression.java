@@ -1,6 +1,5 @@
 package com.bnc.expression.relation;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.bnc.expression.DimensionExpression;
 import com.bnc.expression.Expression;
 import com.bnc.expression.ValueExpression;
@@ -8,9 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  * 关系表达式
@@ -22,13 +22,14 @@ import java.util.Objects;
 @NoArgsConstructor
 @Setter
 @Accessors(chain = true)
+@Slf4j
 public abstract class RelationExpression implements Expression {
 
 
     /**
      * 维度
      */
-    private  DimensionExpression dimensionExpression;
+    private DimensionExpression dimensionExpression;
 
     /**
      * 表达式的值 =,!=,>=等
@@ -38,10 +39,10 @@ public abstract class RelationExpression implements Expression {
     /**
      * 值
      */
-    private  ValueExpression<?> valueExpression;
+    private ValueExpression<?> valueExpression;
 
 
-    protected RelationExpression(DimensionExpression dimensionExpression,  String val, ValueExpression<?> valueExpression) {
+    protected RelationExpression(DimensionExpression dimensionExpression, String val, ValueExpression<?> valueExpression) {
         this.dimensionExpression = dimensionExpression;
         this.val = val;
         this.valueExpression = valueExpression;
@@ -49,17 +50,13 @@ public abstract class RelationExpression implements Expression {
 
 
     @Override
-    public boolean eval(Map<String, Object> o) {
-        if (Objects.isNull(o) || CollectionUtil.isEmpty(o)) {
+    public boolean eval(Map<String, Object> param) {
+        Set<String> keys = param.keySet();
+        if (param.isEmpty() || !keys.contains(getDimensionExpression().getVal())) {
+            log.warn("paramMap did not contain dimension:{}", this.getDimensionExpression().getVal());
             return false;
         }
-
-        if (!o.containsKey(dimensionExpression.getVal())) {
-            return false;
-        }
-        // 表达式校验
-
-        return o.get(dimensionExpression.getVal()).equals(valueExpression.getVal());
+        return true;
     }
 
     public abstract RelationExpression copy();

@@ -6,6 +6,8 @@ import com.bnc.expression.ExpressionFactory;
 import com.bnc.expression.ValueExpression;
 import com.bnc.expression.logic.LogicExpression;
 import com.bnc.expression.node.ExpressionNode;
+import com.bnc.expression.relation.In;
+import com.bnc.expression.relation.NotIn;
 import com.bnc.expression.relation.RelationExpression;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
@@ -111,7 +113,6 @@ public class ExpressionParser {
      * @param stack (用户=1000) and ((IP='192.168.1.x' or 地址='深圳') AND (张三='哈哈哈') AND (王五='bababa'))
      */
     private static void parseExpression(Stack<Expression> stack) {
-
 
         Stack<ExpressionNode> leftStack = new Stack<>();
 
@@ -241,7 +242,7 @@ public class ExpressionParser {
                 // 如果匹配到逻辑表达式 比如 AND  OR 等.则右边的是值
                 if (substring.equalsIgnoreCase(val)) {
                     i = i + val.length() - 1;
-                    if (!StringUtils.isBlank(dimensionOrValue.toString().trim())) {
+                    if (!StringUtils.isBlank(dimensionOrValue.toString().trim().replace("[", "").replace("]", ""))) {
                         expressionStack.push(new ValueExpression<>(dimensionOrValue.toString()));
                     }
                     expressionStack.push(l.copy());
@@ -250,6 +251,9 @@ public class ExpressionParser {
                 }
             }
             dimensionOrValue.append(chars[i]);
+        }
+        if (StringUtils.isNotBlank(dimensionOrValue.toString().trim())) {
+            expressionStack.push(new ValueExpression<>(dimensionOrValue.toString().trim().replace("[", "").replace("]", "")));
         }
         return expressionStack.toArray(new Expression[0]);
     }

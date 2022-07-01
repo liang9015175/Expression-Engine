@@ -2,6 +2,10 @@ package com.bnc.expression.relation;
 
 import com.bnc.expression.DimensionExpression;
 import com.bnc.expression.ValueExpression;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * IS 表达式
@@ -9,6 +13,7 @@ import com.bnc.expression.ValueExpression;
  * @author songliangliang
  * @since 2022/6/28
  */
+@Slf4j
 public class Is extends RelationExpression {
 
     public static String symbol = " IS ";
@@ -24,5 +29,28 @@ public class Is extends RelationExpression {
     @Override
     public RelationExpression copy() {
         return new Is();
+    }
+
+    @Override
+    public boolean eval(Map<String, Object> param) {
+        if (super.eval(param)) {
+            Object actual = param.get(getDimensionExpression().getVal());
+            String expect = getValueExpression().getVal();
+            if (expect.equalsIgnoreCase("null")) {
+                if (Objects.isNull(actual)) {
+                    return true;
+                }
+                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), expect, actual);
+                return false;
+            }
+            if (expect.equalsIgnoreCase("not null")) {
+                if (Objects.nonNull(actual)) {
+                    return true;
+                }
+                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), expect, actual);
+                return false;
+            }
+        }
+        return false;
     }
 }
