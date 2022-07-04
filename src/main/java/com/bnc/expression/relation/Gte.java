@@ -40,7 +40,7 @@ public class Gte extends RelationExpression {
             if (actual.compareTo(expect) >= 0) {
                 return true;
             } else {
-                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), expect, actual);
+                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), symbol+expect, actual);
             }
         }
         return false;

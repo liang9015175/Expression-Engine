@@ -6,8 +6,6 @@ import com.bnc.expression.ExpressionFactory;
 import com.bnc.expression.ValueExpression;
 import com.bnc.expression.logic.LogicExpression;
 import com.bnc.expression.node.ExpressionNode;
-import com.bnc.expression.relation.In;
-import com.bnc.expression.relation.NotIn;
 import com.bnc.expression.relation.RelationExpression;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
@@ -37,26 +35,6 @@ public class ExpressionParser {
         return parse(expressions);
     }
 
-    /**
-     * 解析实际入参，将其转化成为k-v键值对
-     *
-     * @param expression 实际入参表达式
-     * @return 实际入参的key-value集合，用于代入expression 内部进行求值
-     */
-    public static Map<String, Object> convert(String expression) {
-        return null;
-    }
-
-    /**
-     * 对某个输入，按照表达式进行校验
-     *
-     * @param expression       表达式
-     * @param actualExpression 实际入参
-     * @return 校验结果为真 or false
-     */
-    public static boolean eval(String expression, String actualExpression) {
-        return parse(expression).eval(convert(actualExpression));
-    }
 
     /**
      * 对某个输入，按照表达式进行校验
@@ -67,18 +45,6 @@ public class ExpressionParser {
      */
     public static boolean eval(String expression, Map<String, Object> actualExpression) {
         return parse(expression).eval(actualExpression);
-    }
-
-    /**
-     * 对某个输入，按照表达式进行校验
-     *
-     * @param expressionNode   表达式
-     * @param actualExpression 实际入参
-     * @return 校验结果为真 or false
-     */
-    public static boolean eval(ExpressionNode expressionNode, String actualExpression) {
-
-        return expressionNode.eval(convert(actualExpression));
     }
 
     /**

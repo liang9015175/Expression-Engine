@@ -2,14 +2,13 @@ package com.bnc.expression.node;
 
 import cn.hutool.json.JSONUtil;
 import com.bnc.expression.Expression;
+import com.bnc.expression.logic.And;
 import com.bnc.expression.logic.LogicExpression;
 import com.bnc.expression.relation.RelationExpression;
-import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,17 +20,8 @@ import java.util.Objects;
  */
 @Data
 @Accessors(chain = true)
+@Slf4j
 public class ExpressionNode implements Expression {
-
-    /**
-     * 表达式名称，系统程序自定义
-     */
-    //private String name;
-
-    /**
-     * 是否是虚拟节点，虚拟节点代表的是逻辑关系的占位符节点
-     */
-    //private boolean virtual;
 
     /**
      * 是否是叶子节点，叶子节点是单个表达式的最小单位，包含了维度和值，以及基本的关系比如 = != 等等
@@ -67,31 +57,24 @@ public class ExpressionNode implements Expression {
      */
     @Override
     public boolean eval(Map<String, Object> param) {
-        // todo 校验表达式
-        return false;
-    }
-
-
-    /**
-     * 采用中序遍历法将节点进行遍历输出，递归
-     *
-     * @return 所有叶子表达式集合
-     */
-    public List<ExpressionNode> convert() {
-        LinkedList<ExpressionNode> stack = Lists.newLinkedList();
-        recursion(this, stack);
-        // todo 对所有的叶子节点进行占位
-        return stack;
-    }
-
-    private void recursion(ExpressionNode expressionNode, LinkedList<ExpressionNode> stack) {
-        if (Objects.nonNull(expressionNode)) {
-            recursion(this.left, stack);
-            stack.add(this);
-            recursion(this.right, stack);
+        if (this.leaf) {
+            // 叶子节点
+            return this.relationExpression.eval(param);
+        } else {
+            boolean leftHand = Objects.isNull(this.left) || this.left.eval(param);
+            boolean rightHand = Objects.isNull(this.right) || this.right.eval(param);
+            boolean b;
+            if (this.logicExpression instanceof And) {
+                b = leftHand && rightHand;
+            } else {
+                b = leftHand || rightHand;
+            }
+            if (!b) {
+                log.error("expression eval fail,expect:{},actual:{}", getVal(), JSONUtil.toJsonStr(param));
+            }
+            return b;
         }
     }
-
     @Override
     public String getVal() {
         return JSONUtil.toJsonStr(this);

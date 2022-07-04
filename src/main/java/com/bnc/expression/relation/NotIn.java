@@ -6,7 +6,6 @@ import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class NotIn extends RelationExpression {
             List<String> actual = Splitter.on(",").splitToList(param.get(getDimensionExpression().getVal()).toString());
             boolean b = expect.stream().anyMatch(actual::contains);
             if (b) {
-                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), expect, actual);
+                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), symbol+expect, actual);
                 return false;
             }
             return true;

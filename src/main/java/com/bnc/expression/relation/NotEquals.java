@@ -5,6 +5,7 @@ import com.bnc.expression.ValueExpression;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -35,9 +36,9 @@ public class NotEquals extends RelationExpression {
         if (super.eval(param)) {
             Object actual = param.get(getDimensionExpression().getVal());
             String expect = getValueExpression().getVal();
-            boolean b = !expect.equals(actual.toString());
+            boolean b = !expect.equals(Objects.isNull(actual)?null:actual.toString());
             if (!b) {
-                log.warn("dimension:{} eval fail ,expect:{},actual:{}", getDimensionExpression().getVal(), expect, actual);
+                log.warn("dimension:{} eval fail ,expect:{},actual:{}",getDimensionExpression().getVal(), symbol+expect, actual);
                 return false;
             }
             return true;

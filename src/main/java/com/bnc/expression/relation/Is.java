@@ -1,9 +1,11 @@
 package com.bnc.expression.relation;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.bnc.expression.DimensionExpression;
 import com.bnc.expression.ValueExpression;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,7 +35,7 @@ public class Is extends RelationExpression {
 
     @Override
     public boolean eval(Map<String, Object> param) {
-        if (super.eval(param)) {
+        if (!CollectionUtil.isEmpty(param)) {
             Object actual = param.get(getDimensionExpression().getVal());
             String expect = getValueExpression().getVal();
             if (expect.equalsIgnoreCase("null")) {
