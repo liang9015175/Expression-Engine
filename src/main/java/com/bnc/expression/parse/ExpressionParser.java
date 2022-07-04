@@ -159,6 +159,7 @@ public class ExpressionParser {
             }
             if (Objects.nonNull(d) && Objects.nonNull(v) && Objects.nonNull(r)) {
                 RelationExpression relationExpression = r.setDimensionExpression(d).setValueExpression(v);
+                relationExpression.setVal(d.getVal()+r.getVal()+v.getVal());
                 subStack.push(relationExpression);
                 d = null;
                 v = null;

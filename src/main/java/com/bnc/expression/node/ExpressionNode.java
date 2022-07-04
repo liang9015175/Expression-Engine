@@ -5,10 +5,12 @@ import com.bnc.expression.Expression;
 import com.bnc.expression.logic.And;
 import com.bnc.expression.logic.LogicExpression;
 import com.bnc.expression.relation.RelationExpression;
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -75,8 +77,30 @@ public class ExpressionNode implements Expression {
             return b;
         }
     }
+
     @Override
     public String getVal() {
         return JSONUtil.toJsonStr(this);
+    }
+
+    /**
+     * 表达式节点进行序列化索引，方便按照维度进行入库索引检索
+     *
+     * @return {@link RelationExpression}
+     */
+    public List<Expression> index() {
+        List<Expression> expressions = Lists.newArrayList();
+        index(this, expressions);
+        return expressions;
+    }
+
+    private void index(ExpressionNode node, List<Expression> expressions) {
+        if (Objects.nonNull(node)) {
+            index(node.left, expressions);
+            if (node.isLeaf()) {
+                expressions.add(node.getRelationExpression());
+            }
+            index(node.right, expressions);
+        }
     }
 }

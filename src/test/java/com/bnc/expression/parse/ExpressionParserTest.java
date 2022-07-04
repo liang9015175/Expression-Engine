@@ -1,5 +1,6 @@
 package com.bnc.expression.parse;
 
+import cn.hutool.json.JSONUtil;
 import com.bnc.expression.node.ExpressionNode;
 
 import java.util.HashMap;
@@ -102,6 +103,8 @@ public class ExpressionParserTest {
 
         String origin = "sex=女 and (age>19 and age<22) or name  in [张三,李四]";
         ExpressionNode parse = ExpressionParser.parse(origin);
+        System.out.println(parse.getVal());
+        System.out.println(JSONUtil.toJsonStr(parse.index()));
         Map<String,Object> param=new HashMap<>();
         param.put("sex","女");
         param.put("age",24);
