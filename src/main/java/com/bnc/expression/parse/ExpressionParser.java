@@ -7,6 +7,8 @@ import com.bnc.expression.node.ExpressionNode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * 表达式解析器
@@ -25,10 +27,8 @@ public class ExpressionParser {
      * @return 表达式节点
      */
     public static ExpressionNode parse(String expression) {
-        // 1.解析
-        Expression[] expressions = ExpressionUtil.parseOrigin(expression);
         // 2.替换
-        return ExpressionUtil.parse(expressions);
+        return ExpressionUtil.parse(ExpressionUtil.parseOrigin(expression));
     }
 
 

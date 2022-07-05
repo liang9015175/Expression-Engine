@@ -119,21 +119,15 @@ public class ExpressionParserTest {
     public void complexGt2() {
         Map<String, Object> bindings = new HashMap<>();
         bindings.put("a", "123");
-        bindings.put("b", "123");
+        bindings.put("b", "1234");
         bindings.put("c", "aa");
         bindings.put("d", "ff");
 
-        long a = System.currentTimeMillis();
-        ExpressionParser.parse("a='123' AND b!='123' OR (c='aa' AND d='ff')").eval(bindings);
-        long b = System.currentTimeMillis();
-        System.out.println("test1:" + (b - a));
-
-        ExpressionParser.parse("a='123' AND b!='123' OR (c='aa' AND d='33')").eval(bindings);
-        long c = System.currentTimeMillis();
-        System.out.println("test2:" + (c - b));
-
-        ExpressionParser.parse("a='123' AND b!='123' OR (c='aa' AND d='44')").eval(bindings);
-        long d = System.currentTimeMillis();
-        System.out.println("test3:" + (d - c));}
-
+        for (int i=0;i<10;i++){
+            long a = System.currentTimeMillis();
+            System.out.println(ExpressionParser.parse("a='123' AND b!='123' OR (c='aa' AND d='ff')").eval(bindings));
+            long b = System.currentTimeMillis();
+            System.out.println("test1:" + (b - a));
+        }
+    }
 }

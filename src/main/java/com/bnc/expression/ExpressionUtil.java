@@ -1,8 +1,8 @@
 package com.bnc.expression;
 
-import com.bnc.expression.logic.LogicExpression;
+import com.bnc.expression.logic.*;
 import com.bnc.expression.node.ExpressionNode;
-import com.bnc.expression.relation.RelationExpression;
+import com.bnc.expression.relation.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 
@@ -14,11 +14,32 @@ import java.util.*;
  */
 public class ExpressionUtil {
 
-    public static ExpressionNode parse(Expression[] expressions) {
+    public static final List<LogicExpression> logicExpressionList = Lists.newArrayList();
+
+    public static final List<RelationExpression> relationExpressionList = Lists.newArrayList();
+
+    static {
+        logicExpressionList.add(new And());
+        logicExpressionList.add(new Or());
+        logicExpressionList.add(new GroupOpen());
+        logicExpressionList.add(new GroupClose());
+
+        relationExpressionList.add(new Equals());
+        relationExpressionList.add(new Gt());
+        relationExpressionList.add(new Gte());
+        relationExpressionList.add(new In());
+        relationExpressionList.add(new Is());
+        relationExpressionList.add(new Lt());
+        relationExpressionList.add(new Lte());
+        relationExpressionList.add(new NotEquals());
+        relationExpressionList.add(new NotIn());
+    }
+
+    public static ExpressionNode parse(Queue<Expression> queue) {
         Stack<Expression> stack = new Stack<>();
-        for (Expression expression : expressions) {
+        // 消消乐逻辑
+        for (Expression expression : queue) {
             stack.push(expression);
-            // pop till the first '('
             // 替换成新的表达式
             if (expression.getVal().equals(")")) {
                 parseExpression(stack);
@@ -37,16 +58,11 @@ public class ExpressionUtil {
      * @param stack (用户=1000) and ((IP='192.168.1.x' or 地址='深圳') AND (张三='哈哈哈') AND (王五='bababa'))
      */
     public static void parseExpression(Stack<Expression> stack) {
-
         Stack<ExpressionNode> leftStack = new Stack<>();
-
-        // IP='192.168.1.x' or 地址='深圳'
         Stack<Expression> subStack = subStack(stack);
         if (!subStack.isEmpty()) {
-
             List<Expression> subExpressions = Lists.newArrayList(subStack.toArray(new Expression[0]));
             Collections.reverse(subExpressions);
-
             for (Expression sub : subExpressions) {
                 if (sub instanceof LogicExpression) {
                     LogicExpression l = ((LogicExpression) sub).copy();
@@ -120,23 +136,20 @@ public class ExpressionUtil {
                 v = null;
                 r = null;
             }
-            if(pop.getVal().equals("(")){
+            if (pop.getVal().equals("(")) {
                 break;
             }
         }
         return subStack;
     }
 
-    public static Expression[] parseOrigin(String origin) {
-        Stack<Expression> expressionStack = new Stack<>();
-
-        Collection<LogicExpression> logicList = Operations.logicExpressionList;
-        Collection<RelationExpression> relationList = Operations.relationExpressionList;
+    public static Queue<Expression> parseOrigin(String origin) {
+        Queue<Expression> expressionStack = new ArrayDeque<>();
         char[] chars = origin.toCharArray();
         StringBuilder dimensionOrValue = new StringBuilder();
         out:
         for (int i = 0; i < chars.length; i++) {
-            for (RelationExpression r : relationList) {
+            for (RelationExpression r : relationExpressionList) {
                 String val = r.getVal();
                 int min = Math.min(origin.length(), i + val.length());
                 String substring = origin.substring(i, min);
@@ -145,15 +158,14 @@ public class ExpressionUtil {
                 if (substring.equalsIgnoreCase(val)) {
                     i = i + val.length() - 1;
                     if (!StringUtils.isBlank(dimensionOrValue.toString().trim())) {
-                        expressionStack.push(new DimensionExpression(dimensionOrValue.toString().trim()));
+                        expressionStack.add(new DimensionExpression(dimensionOrValue.toString().trim()));
                     }
-                    expressionStack.push(r.copy());
+                    expressionStack.add(r.copy());
                     dimensionOrValue = new StringBuilder(); // clear
                     continue out;
                 }
-
             }
-            for (LogicExpression l : logicList) {
+            for (LogicExpression l : logicExpressionList) {
                 String val = l.getVal();
                 int min = Math.min(origin.length(), i + val.length());
                 String substring = origin.substring(i, min);
@@ -162,9 +174,9 @@ public class ExpressionUtil {
                 if (substring.equalsIgnoreCase(val)) {
                     i = i + val.length() - 1;
                     if (!StringUtils.isBlank(dimensionOrValue.toString().trim().replace("[", "").replace("]", ""))) {
-                        expressionStack.push(new ValueExpression<>(dimensionOrValue.toString()));
+                        expressionStack.add(new ValueExpression<>(dimensionOrValue.toString()));
                     }
-                    expressionStack.push(l.copy());
+                    expressionStack.add(l.copy());
                     dimensionOrValue = new StringBuilder();
                     continue out;
                 }
@@ -172,8 +184,8 @@ public class ExpressionUtil {
             dimensionOrValue.append(chars[i]);
         }
         if (StringUtils.isNotBlank(dimensionOrValue.toString().trim())) {
-            expressionStack.push(new ValueExpression<>(dimensionOrValue.toString().trim().replace("[", "").replace("]", "")));
+            expressionStack.add(new ValueExpression<>(dimensionOrValue.toString().trim().replace("[", "").replace("]", "")));
         }
-        return expressionStack.toArray(new Expression[0]);
+        return expressionStack;
     }
 }
