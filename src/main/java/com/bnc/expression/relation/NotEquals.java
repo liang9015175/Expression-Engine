@@ -38,7 +38,7 @@ public class NotEquals extends RelationExpression {
             String expect = getValueExpression().getVal();
             boolean b = !expect.equals(Objects.isNull(actual)?null:actual.toString());
             if (!b) {
-                log.warn("dimension:{} eval fail ,expect:{},actual:{}",getDimensionExpression().getVal(), symbol+expect, actual);
+                //log.warn("dimension:{} eval fail ,expect:{},actual:{}",getDimensionExpression().getVal(), symbol+expect, actual);
                 return false;
             }
             return true;
