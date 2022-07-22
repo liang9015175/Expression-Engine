@@ -1,9 +1,13 @@
 package com.bnc.expression.parse;
 
+import cn.hutool.json.JSONUtil;
+import com.bnc.expression.Expression;
+import com.bnc.expression.ExpressionUtil;
 import com.bnc.expression.node.ExpressionNode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * @author songliangliang
@@ -123,11 +127,20 @@ public class ExpressionParserTest {
         bindings.put("c", "aa");
         bindings.put("d", "ff");
 
-        for (int i=0;i<10;i++){
-            long a = System.currentTimeMillis();
-            System.out.println(ExpressionParser.parse("a='123' AND b!='123' OR (c='aa' AND d='ff')").eval(bindings));
-            long b = System.currentTimeMillis();
-            System.out.println("test1:" + (b - a));
-        }
+
+        long a = System.currentTimeMillis();
+        System.out.println(JSONUtil.toJsonStr(ExpressionUtil.parseOrigin("a='123' AND b!='123' OR (c='aa' AND d='ff')")));
+        long b = System.currentTimeMillis();
+        System.out.println("test1:" + (b - a));
+
+    }
+    @org.junit.Test
+    public void complexGt22() {
+        Map<String, Object> bindings = new HashMap<>();
+        bindings.put("last1", "1");
+        bindings.put("last2", "2");
+        boolean eval = ExpressionParser.parse("last1 in [1,2,3] and last2 in [2,3,4]").eval(bindings);
+        System.out.println(eval);
+
     }
 }

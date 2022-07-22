@@ -1,14 +1,10 @@
 package com.bnc.expression.parse;
 
-import cn.hutool.json.JSONUtil;
-import com.bnc.expression.Expression;
 import com.bnc.expression.ExpressionUtil;
 import com.bnc.expression.node.ExpressionNode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Queue;
-import java.util.Stack;
 
 /**
  * 表达式解析器

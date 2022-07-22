@@ -7,6 +7,16 @@
       <option name="url" value="http://nexus.xyb2b.com.cn/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="byb-releases" />
+      <option name="name" value="byb-releases" />
+      <option name="url" value="http://192.168.138.192:8081/repository/maven-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="byb-nexus-snapshot" />
+      <option name="name" value="Team Nexus Repository" />
+      <option name="url" value="http://192.168.138.192:8081/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="al-nexus" />
       <option name="name" value="Akulaku Nexus" />
       <option name="url" value="https://git.silvrr.com:8983/repository/maven-public/" />

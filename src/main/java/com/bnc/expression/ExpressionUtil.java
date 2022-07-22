@@ -158,7 +158,7 @@ public class ExpressionUtil {
                 if (substring.equalsIgnoreCase(val)) {
                     i = i + val.length() - 1;
                     if (!StringUtils.isBlank(dimensionOrValue.toString().trim())) {
-                        expressionStack.add(new DimensionExpression(dimensionOrValue.toString().trim()));
+                        expressionStack.add(new DimensionExpression(dimensionOrValue.toString().trim().replace("[", "").replace("]", "")));
                     }
                     expressionStack.add(r.copy());
                     dimensionOrValue = new StringBuilder(); // clear
@@ -173,8 +173,8 @@ public class ExpressionUtil {
                 // 如果匹配到逻辑表达式 比如 AND  OR 等.则右边的是值
                 if (substring.equalsIgnoreCase(val)) {
                     i = i + val.length() - 1;
-                    if (!StringUtils.isBlank(dimensionOrValue.toString().trim().replace("[", "").replace("]", ""))) {
-                        expressionStack.add(new ValueExpression<>(dimensionOrValue.toString()));
+                    if (!StringUtils.isBlank(dimensionOrValue.toString())) {
+                        expressionStack.add(new ValueExpression<>(dimensionOrValue.toString().trim().replace("[", "").replace("]", "")));
                     }
                     expressionStack.add(l.copy());
                     dimensionOrValue = new StringBuilder();
