@@ -1,9 +1,13 @@
 package com.bnc.expression.parse;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import cn.hutool.json.JSONUtil;
 import com.bnc.expression.Expression;
 import com.bnc.expression.ExpressionUtil;
 import com.bnc.expression.node.ExpressionNode;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -124,18 +128,22 @@ public class ExpressionParserTest {
 
     @org.junit.Test
     public void complexGt2() {
-        for (int i=0;i<100;i++){
-            Map<String, Object> bindings = new HashMap<>();
-            bindings.put("sex", "女");
-            bindings.put("age", "25");
-            bindings.put("tag", "makeup");
+//        LoggerContext iLoggerFactory =(LoggerContext) LoggerFactory.getILoggerFactory();
+//        iLoggerFactory.getLoggerList().forEach(v->v.setLevel(Level.OFF));
+//        for (int i=0;i<100;i++){
+//            Map<String, Object> bindings = new HashMap<>();
+//            bindings.put("sex", "女");
+//            bindings.put("age", "25");
+//            bindings.put("tag", "makeup");
+//
+//            long a = System.currentTimeMillis();
+//            ExpressionParser.eval("sex=女 or （(age≥20 and age≤30) and tag=makeup)", bindings);
+//            long b = System.currentTimeMillis();
+//            System.out.println("test1:" + (b - a));
+//        }
 
-            long a = System.currentTimeMillis();
-            ExpressionParser.eval("sex=女 or （(age≥20 and age≤30) and tag=makeup)", bindings);
-            long b = System.currentTimeMillis();
-            System.out.println("test1:" + (b - a));
-        }
-
+        ExpressionNode parse = ExpressionParser.parse("sex=女 or ((age≥20 and age≤30) and tag=makeup)");
+        System.out.println(JSONUtil.toJsonStr(parse));
 
     }
     @org.junit.Test
