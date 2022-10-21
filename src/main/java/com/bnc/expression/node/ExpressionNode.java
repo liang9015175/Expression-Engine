@@ -72,7 +72,9 @@ public class ExpressionNode implements Expression {
                 b = leftHand || rightHand;
             }
             if (!b) {
-                log.error("expression eval fail,expect:{},actual:{}", getVal(), JSONUtil.toJsonStr(param));
+                log.error("expression eval 【false】,expect:{},actual:{}", getVal(), JSONUtil.toJsonStr(param));
+            }else {
+                log.info("expression eval 【true】,expect:{},actual:{}",getVal(),JSONUtil.toJsonStr(param));
             }
             return b;
         }

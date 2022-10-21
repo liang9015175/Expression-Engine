@@ -106,32 +106,36 @@ public class ExpressionParserTest {
 
     @org.junit.Test
     public void complexGt() {
-
+        // 表达式内容
         String origin = "sex=女 and (age>19 and age<22) or name  in [张三,李四]";
-        ExpressionNode parse = ExpressionParser.parse(origin);
-        System.out.println(parse.getVal());
-        //System.out.println(JSONUtil.toJsonStr(parse.index()));
+        // 实际入参
         Map<String, Object> param = new HashMap<>();
         param.put("sex", "女");
         param.put("age", 24);
-        param.put("name", "李四");// u can modify this param, eg. not set this item  or set age explicit value
-        boolean eval = parse.eval(param);
-        System.out.println(eval);
+        param.put("name", "李四");
+        // 校验
+        boolean eval = ExpressionParser.eval(origin,param);
+        // ExpressionNode parse = ExpressionParser.parse(origin); // 输出表达式解析后的节点结构信息,用于观察表达式的整体结构是否满足树状结构
+        // boolean eval1 = ExpressionParser.parse(origin).eval(param); // 或者你也可以这样来评价整体的表达式
+        // Queue<Expression> expressions = ExpressionUtil.parseOrigin(origin);// 输出表达式被解析后的每个表达式列表,用于观察解析后每个表达式是否正确
+
+        System.out.println("整体评价结果: "+eval);
     }
 
     @org.junit.Test
     public void complexGt2() {
-        Map<String, Object> bindings = new HashMap<>();
-        bindings.put("a", "123");
-        bindings.put("b", "1234");
-        bindings.put("c", "aa");
-        bindings.put("d", "ff");
+        for (int i=0;i<100;i++){
+            Map<String, Object> bindings = new HashMap<>();
+            bindings.put("sex", "女");
+            bindings.put("age", "25");
+            bindings.put("tag", "makeup");
 
+            long a = System.currentTimeMillis();
+            ExpressionParser.eval("sex=女 or （(age≥20 and age≤30) and tag=makeup)", bindings);
+            long b = System.currentTimeMillis();
+            System.out.println("test1:" + (b - a));
+        }
 
-        long a = System.currentTimeMillis();
-        System.out.println(JSONUtil.toJsonStr(ExpressionUtil.parseOrigin("a='123' AND b!='123' OR (c='aa' AND d='ff')")));
-        long b = System.currentTimeMillis();
-        System.out.println("test1:" + (b - a));
 
     }
     @org.junit.Test

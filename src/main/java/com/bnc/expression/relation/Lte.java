@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Slf4j
 public class Lte extends RelationExpression {
-    public static String symbol = "<=";
+    public static String symbol = "≤";
 
     public Lte(DimensionExpression dimensionExpression, ValueExpression<?> valueExpression) {
         super(dimensionExpression, symbol, valueExpression);
