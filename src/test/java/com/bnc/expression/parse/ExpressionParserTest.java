@@ -151,7 +151,8 @@ public class ExpressionParserTest {
         Map<String, Object> bindings = new HashMap<>();
         bindings.put("last1", "1");
         bindings.put("last2", "2");
-        boolean eval = ExpressionParser.parse("last1 in [1,2,3] and last2 in [2,3,4]").eval(bindings);
+        //@@aku->last1 in [2,3,4,5]@@mkp->last1 in[6,7,8,9]
+        boolean eval = ExpressionParser.parse("last1 in[6,7,8,9]").eval(bindings);
         System.out.println(eval);
 
     }
