@@ -426,3 +426,43 @@ D AND E   作为第二组
 [优先级演示.mp4](video/优先级演示_1twx77Z9cM.mp4)
 
 &#x20; &#x20;
+
+### 最佳实践
+#### 支持的关系符
+```js
+=，!=，>，<，≥，≤，in，is null，is not null
+```
+#### 支持的逻辑符
+```js
+AND , OR , ()
+```
+#### 支持的表达式
+```js
+// 基本表达式
+用户=1000
+username!='张三'
+age>18
+age is null // 等等
+
+// 符合表达式
+用户=1000 and IP='192.168.1.x'
+用户=1000 and IP='192.168.1.x' or 地址='深圳' 
+
+// 参与优先级的表达式
+用户=1000 and (IP='192.168.1.x' or 地址='深圳')
+用户=1000 and (IP='192.168.1.x' or 地址='深圳') and (TAG='白名单用户' or 设备='IOS')
+用户=1000 and (IP='192.168.1.x' or (地址='深圳' or name is not null)) and (TAG='白名单用户' or 设备='IOS') // 多个括弧嵌套
+```
+#### 如何校验
+```java
+String origin = "sex=女"; // 构建表达式
+
+ExpressionNode parse = ExpressionParser.parse(origin); // 你可以选择解析成一棵树，看看结构是否正确
+
+Map<String, Object> param = new HashMap<>(); // 传入实际的参数
+param.put("sex", "女");
+
+boolean eval = parse.eval(param); // 执行表达式
+System.out.println(eval); 
+```    
+
